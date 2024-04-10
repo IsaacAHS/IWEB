@@ -1,0 +1,125 @@
+public class EsparcoSimulation {
+    private char[][] grid;
+    private int x, y;
+    private char direction;
+    private final int expansionStep;
+
+    public EsparcoSimulation(int size, int startX, int startY, char direction, int expansionStep) {
+        this.grid = new char[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                this.grid[i][j] = '•'; // Todas las parcelas inicialmente tienen trigo.
+            }
+        }
+        this.x = startX;
+        this.y = startY;
+        this.direction = direction;
+        this.expansionStep = expansionStep;
+    }
+
+    private void turnRight() {
+        switch (this.direction) {
+            case 'U':
+                this.direction = 'R';
+                break;
+            case 'R':
+                this.direction = 'D';
+                break;
+            case 'D':
+                this.direction = 'L';
+                break;
+            case 'L':
+                this.direction = 'U';
+                break;
+        }
+    }
+
+    private void turnLeft() {
+        switch (this.direction) {
+            case 'U':
+                this.direction = 'L';
+                break;
+            case 'L':
+                this.direction = 'D';
+                break;
+            case 'D':
+                this.direction = 'R';
+                break;
+            case 'R':
+                this.direction = 'U';
+                break;
+        }
+    }
+
+    private void move() {
+        switch (this.direction) {
+            case 'U':
+                this.x--;
+                break;
+            case 'R':
+                this.y++;
+                break;
+            case 'D':
+                this.x++;
+                break;
+            case 'L':
+                this.y--;
+                break;
+        }
+
+        if (this.x < 0) {
+            this.x = 0;
+            expandGrid('U');
+        } else if (this.x >= this.grid.length) {
+            expandGrid('D');
+        }
+        if (this.y < 0) {
+            this.y = 0;
+            expandGrid('L');
+        } else if (this.y >= this.grid[0].length) {
+            expandGrid('R');
+        }
+    }
+
+    private void expandGrid(char direction) {
+        
+    }
+
+    private void dropFeromoneOrTrigo() {
+        if (this.grid[this.x][this.y] == '•') {
+            this.grid[this.x][this.y] = '■';
+            turnRight();
+        } else {
+            this.grid[this.x][this.y] = '•';
+            turnLeft();
+        }
+    }
+
+    public void simulate(int steps) {
+        for (int i = 0; i < steps; i++) {
+            dropFeromoneOrTrigo();
+            move();
+        }
+    }
+
+    public void printGrid() {
+        for (char[] row : this.grid) {
+            for (char cell : row) {
+                System.out.print(cell + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        int size = 5; // Tamaño inicial de la chacra
+        int startX = 2, startY = 2; // Posición inicial de Esparco
+        char direction = 'R'; // Dirección inicial
+        int expansionStep = 4; // Pasos para la expansión (esto debe implementarse en expandGrid)
+        int steps = 22; // Pasos a simular
+
+        EsparcoSimulation esparco = new EsparcoSimulation(size, startX, startY, direction, expansionStep);
+        esparco.simulate(steps);
+        esparco.printGrid();
+    }
+}
